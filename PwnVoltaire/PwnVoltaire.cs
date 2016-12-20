@@ -14,9 +14,9 @@ namespace PwnVoltaire
             if (!xml.Contains("errors"))
                 return "Pas d'erreur. Je crois...";
 
-            var matches = Regex.Matches(xml, "<message>(.*?)</message>");
+            var messages = Regex.Matches(xml, "<message>(.*?)</message>");
             string ret = "";
-            foreach (Match match in matches)
+            foreach (Match match in messages)
             {
                 ret += match.Value.Replace("<message>", "").Replace("</message>", "").Replace("[b]", "").Replace("[/b]", "") + "\n";
             }

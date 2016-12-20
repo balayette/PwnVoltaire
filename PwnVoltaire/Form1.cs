@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 
 namespace PwnVoltaire
@@ -70,7 +71,7 @@ namespace PwnVoltaire
             var str = this.GetSentence();
             if (str == null)
                 return;
-            var resp = PwnVoltaire.GetReadableOutput(this._api.GetApiResp(str));
+            var resp = HttpUtility.HtmlDecode(PwnVoltaire.GetReadableOutput(this._api.GetApiResp(str)));
             this.richTextBox1.Text += "\n" + resp + "\n";
         }
     }
