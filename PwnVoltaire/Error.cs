@@ -58,6 +58,9 @@ namespace PwnVoltaire
                 case "grammar":
                     this._errorType = ErrorTypes.Grammar;
                     break;
+                default:
+                    this._errorType = ErrorTypes.Unknown;
+                    break;
             }
             this._substitution = this._getNextChars(err.Substring(err.IndexOf(this._subString) + this._subString.Length));
             this._start = this._getNextInt(err.Substring(err.IndexOf(this._startString) + this._startString.Length));

@@ -9,6 +9,7 @@ namespace PwnVoltaire
     public enum ErrorTypes
     {
         Spelling,
-        Grammar
+        Grammar,
+        Unknown
     }
 }

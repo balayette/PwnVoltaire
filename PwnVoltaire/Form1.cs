@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
 
@@ -15,18 +8,11 @@ namespace PwnVoltaire
     {
         private Api _api;
 
-        private string _jsPayload;
-
         private void InitStuff()
         {
             this._api = new Api();
-
-
-
-
             this.webBrowser1.ScriptErrorsSuppressed = false;
             this.webBrowser1.Navigate("https://projet-voltaire.fr");
-            
         }
 
         private string _getJsPayload(int start, int end)
@@ -60,22 +46,17 @@ namespace PwnVoltaire
                 return null;
             }
             var spans = el.GetElementsByTagName("span");
-            string str = "";
+            var str = "";
             foreach (HtmlElement htmlElement in spans)
             {
                 str += htmlElement.InnerText;
             }
-            if (str == "")
-            {
-                this.richTextBox1.Text += "\nEmpty sentence";
-                return null;
-            }
-            return str;
-        }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
+            if (str != "")
+                return str;
 
+            this.richTextBox1.Text += "\nEmpty sentence";
+            return null;
         }
 
         private void button1_Click(object sender, EventArgs e)
