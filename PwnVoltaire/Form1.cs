@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Web;
 using System.Windows.Forms;
+using WebKit;
+using WebKit.DOM;
 
 namespace PwnVoltaire
 {
@@ -11,15 +13,14 @@ namespace PwnVoltaire
         private void InitStuff()
         {
             this._api = new Api();
-            this.webBrowser1.ScriptErrorsSuppressed = false;
-            this.webBrowser1.Navigate("https://projet-voltaire.fr");
+            this.webKitBrowser1.Navigate("https://www.projet-voltaire.fr/");
         }
 
         private string _getJsPayload(int start, int end)
         {
             // top quality js
             return
-                "function underlineStuff(){for(var b=document.getElementsByClassName(\"pointAndClickSpan\"),c=" + start + ",d=" + end + ",e=0,f=0;f<b.length;f++){for(var g=0;g<b[f].innerHTML.length;g++)c<=e&&d>=e&&(b[f].style.color=\"red\",b[f].style.textDecoration=\"underline\"),e++}}";
+                "for(var b=document.getElementsByClassName(\"pointAndClickSpan\"),c=" + start + ",d=" + end + ",e=0,f=0;f<b.length;f++){console.log(b[f].innerHTML);for(var g=0;g<b[f].innerHTML.length;g++)c<=e&&d>=e&&(b[f].style.color=\"red\",b[f].style.textDecoration=\"underline\"),e++}";
         }
 
         public Form1()
@@ -30,58 +31,87 @@ namespace PwnVoltaire
 
         private string GetSentence()
         {
-            var elements = this.webBrowser1.Document.GetElementsByTagName("div");
-            HtmlElement el = null;
-            foreach (HtmlElement htmlElement in elements)
+            try
             {
-                if (htmlElement.GetAttribute("className") == "sentence")
+                var elements = this.webKitBrowser1.Document.GetElementsByTagName("div");
+                Element el = null;
+                foreach (Node node in elements)
                 {
-                    el = htmlElement;
-                    break;
+                    var elem = node as Element;
+                    if (elem == null)
+                        continue;
+                    if (!elem.HasAttribute("class"))
+                        continue;
+                    if (elem.GetAttribute("class") == "sentence")
+                    {
+                        el = elem;
+                        break;
+                    }
                 }
-            }
-            if (el == null)
-            {
-                this.richTextBox1.Text += "\nDidn't find a sentence";
+
+                if (el == null || el.ChildNodes.Length < 1)
+                {
+                    this.richTextBox1.Text += "\nDidn't find a sentence";
+                    return null;
+                }
+
+                var str = "";
+                foreach (Node child in el.ChildNodes)
+                {
+                    var elem = child as Element;
+                    if (elem == null)
+                        continue;
+                    if (elem.TagName == "span" || elem.TagName == "SPAN")
+                    {
+                        Console.WriteLine("Found a part of the sentence...");
+                        Console.WriteLine(elem.TextContent);
+                        str += elem.TextContent;
+                    }
+                }
+                if (str != "")
+                {
+                    return str;
+                }
                 return null;
             }
-            var spans = el.GetElementsByTagName("span");
-            var str = "";
-            foreach (HtmlElement htmlElement in spans)
+            catch (Exception e)
             {
-                str += htmlElement.InnerText;
+                Console.WriteLine(e.ToString());
+                return "";
             }
-
-            if (str != "")
-                return str;
-
-            this.richTextBox1.Text += "\nEmpty sentence";
-            return null;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.richTextBox1.Text = "";
-            var str = this.GetSentence();
-            if (str == null)
-                return;
-            var errors = PwnVoltaire.GetReadableOutput(this._api.GetApiResp(str));
-            if (errors.Count == 0)
+            try
             {
-                this.richTextBox1.Text = "Pas d'erreurs, je crois...";
-                return;
+                this.richTextBox1.Text = "";
+                var str = this.GetSentence();
+                if (str == null)
+                    return;
+                var errors = PwnVoltaire.GetReadableOutput(this._api.GetApiResp(str));
+                if (errors.Count == 0)
+                {
+                    this.richTextBox1.Text = "Pas d'erreurs, je crois...";
+                    return;
+                }
+                foreach(var error in errors)
+                {
+                    this.richTextBox1.Text += HttpUtility.HtmlDecode(error.Description(str));
+                    var js = this._getJsPayload(error.Start, error.End);
+                    this.webKitBrowser1.StringByEvaluatingJavaScriptFromString(js);
+                }
             }
-            foreach (var error in errors)
+            catch (Exception ex)
             {
-                this.richTextBox1.Text += HttpUtility.HtmlDecode(error.Description(str));
-                var js = this._getJsPayload(error.Start, error.End);
-                HtmlDocument doc = this.webBrowser1.Document;
-                HtmlElement head = doc.GetElementsByTagName("head")[0];
-                HtmlElement s = doc.CreateElement("script");
-                s.SetAttribute("text", js);
-                head.AppendChild(s);
-                this.webBrowser1.Document.InvokeScript("underlineStuff");
+                Console.WriteLine(e.ToString());
             }
+        }
+            
+
+        private void webKitBrowser1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
