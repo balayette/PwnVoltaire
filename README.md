@@ -1,6 +1,9 @@
+# [RELEASE](https://github.com/d1adev/PwnVoltaire/releases)
+
 Il ne faut pas utiliser ça, c'est mal. Très très mal. C'est juste un PoC.
 
 ![alt tag](https://i.imgur.com/j2MJNYe.gif)
 
-- Si ça se bloque au login sur une page qui dit "Veuillez patienter durant la connection à l'application" faut juste cliquer sur Tableau de bord et voilà
-- Bien cliquer sur Oui quand il demande si on veut continuer d'executer les scripts sur la page
+
+# BUILD INSTRUCTIONS
+Pour build, simplement ouvrir la solution dans Visual Studio, choisir un répertoire de destination pour le build (souvent bin/Debug ou bin/Release) et s'assurer qu'il contienne tous les fichiers présents dans bin/Debug. (DLLs et dossiers)
