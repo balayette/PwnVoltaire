@@ -1,5 +1,3 @@
-# 15/11/2017 : L'API ayant changé, il faut attendre une mise à jour.
-
 Il ne faut pas utiliser ça, c'est mal. Très très mal. C'est juste un PoC.
 
 ![alt tag](https://i.imgur.com/j2MJNYe.gif)
