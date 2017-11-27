@@ -43,8 +43,8 @@ namespace PwnVoltaire
         {
             this._message = msg.Replace("<message>", "")
                 .Replace("</message>", "")
-                .Replace("[b]", "")
-                .Replace("[/b]", "");
+                .Replace("#!", "")
+                .Replace("#$", "");
         }
 
         private void _parseError(string err)

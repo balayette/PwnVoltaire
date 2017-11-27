@@ -83,10 +83,12 @@ namespace PwnVoltaire
 
         private void button1_Click(object sender, EventArgs e)
         {
+            
             try
             {
                 this.richTextBox1.Text = "";
                 var str = this.GetSentence();
+                Console.WriteLine("Found a sentence : " + str);
                 if (str == null)
                     return;
                 var errors = PwnVoltaire.GetReadableOutput(this._api.GetApiResp(str));
@@ -106,6 +108,8 @@ namespace PwnVoltaire
             {
                 Console.WriteLine(e.ToString());
             }
+            //var errs = PwnVoltaire.GetReadableOutput(this._api.GetApiResp("Je fai des faute"));
+
         }
             
 
