@@ -4,7 +4,7 @@ Il ne faut pas utiliser ça, c'est mal. Très très mal. C'est juste un PoC.
 
 
 # RELEASE
-https://github.com/d1adev/PwnVoltaire/releases/tag/v2
+https://github.com/d1adev/PwnVoltaire/releases/tag/v2.1
 
 
 # BUILD INSTRUCTIONS
